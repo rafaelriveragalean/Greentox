@@ -755,11 +755,12 @@ function DisenoTab({settings, setSettings, showToast, logos, setLogos}){
             // Logo Position
             React.createElement('div',{style:{marginBottom:20}},
               React.createElement('div',{style:{fontSize:11,fontWeight:700,color:G.gray,textTransform:'uppercase',letterSpacing:.5,marginBottom:10}},'Posición del logo'),
-              React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6}},
+              React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:6}},
                 [
                   {val:'hero-left',   label:'🖼️ Hero', sub:'Izquierda'},
-                  {val:'hero-center', label:'🖼️ Hero', sub:'Centro'},
+                  {val:'hero-center', label:'🖼️ Hero', sub:'Centro texto'},
                   {val:'hero-right',  label:'🖼️ Hero', sub:'Derecha'},
+                  {val:'hero-mid',    label:'🎯 Hero', sub:'Centro pantalla'},
                   {val:'nav-only',    label:'🔝 Solo Nav', sub:'Barra top'},
                   {val:'nav-hero',    label:'🔝+🖼️ Nav', sub:'+ Hero'},
                   {val:'hidden',      label:'🚫 Oculto', sub:'Sin logo'},

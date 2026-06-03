@@ -69,6 +69,11 @@
   <!-- Degradado suave abajo -->
   <div style="position:absolute;bottom:0;left:0;right:0;height:160px;z-index:2;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.7) 50%,rgba(255,255,255,1) 100%);pointer-events:none"></div>
 
+  <!-- Logo flotante absoluto (para posición centro del hero) -->
+  <div id="heroLogoAbsWrap" style="position:absolute;z-index:4;top:50%;left:50%;transform:translate(-50%,-50%);display:none;pointer-events:none">
+    <img id="heroLogoAbs" alt="GreenTox SC" style="height:70px;object-fit:contain;display:block">
+  </div>
+
   <!-- CONTENIDO -->
   <div style="position:relative;z-index:3;padding:130px 28px 70px;width:100%;max-width:600px">
 
@@ -248,17 +253,27 @@ function getDeliveryPrice(locLat,locLng){
 
 // ── EDITOR EN VIVO — escucha cambios del admin ──────────────
 function applyLogoPosition(pos){
-  const heroWrap = document.getElementById('heroLogoWrap');
-  const heroLogo = document.getElementById('heroLogo');
-  const navLogo  = document.getElementById('navLogo');
-  const navBrand = document.getElementById('navBrand');
+  const heroWrap    = document.getElementById('heroLogoWrap');
+  const heroLogo    = document.getElementById('heroLogo');
+  const absWrap     = document.getElementById('heroLogoAbsWrap');
+  const absLogo     = document.getElementById('heroLogoAbs');
+  const navLogo     = document.getElementById('navLogo');
+  const navBrand    = document.getElementById('navBrand');
+
   // Reset todo
-  if(heroWrap){ heroWrap.style.display=''; heroWrap.style.textAlign='left'; }
+  if(heroWrap){ heroWrap.style.display='none'; heroWrap.style.textAlign='left'; }
   if(heroLogo){ heroLogo.style.display='none'; heroLogo.style.margin='0'; }
-  if(navLogo) navLogo.style.display='none';
+  if(absWrap)  absWrap.style.display='none';
+  if(navLogo)  navLogo.style.display='none';
   if(navBrand) navBrand.style.display='';
 
   if(!pos || pos==='hidden') return;
+
+  // Sincronizar src y tamaño al logo absoluto
+  if(absLogo && heroLogo && heroLogo.src){
+    absLogo.src = heroLogo.src;
+    absLogo.style.height = heroLogo.style.height || '70px';
+  }
 
   if(pos==='hero-left'){
     if(heroWrap){ heroWrap.style.display='block'; heroWrap.style.textAlign='left'; }
@@ -269,8 +284,11 @@ function applyLogoPosition(pos){
   } else if(pos==='hero-right'){
     if(heroWrap){ heroWrap.style.display='block'; heroWrap.style.textAlign='right'; heroWrap.style.width='100%'; }
     if(heroLogo){ heroLogo.style.display='inline-block'; heroLogo.style.marginLeft='auto'; heroLogo.style.marginRight='0'; }
+  } else if(pos==='hero-mid'){
+    // Posición absoluta centro del hero (entre texto y splash)
+    if(absWrap){ absWrap.style.display='block'; absWrap.style.left='58%'; absWrap.style.top='50%'; absWrap.style.transform='translate(-50%,-50%)'; }
+    if(absLogo && heroLogo) absLogo.style.height = heroLogo.style.height || '70px';
   } else if(pos==='nav-only'){
-    if(heroWrap) heroWrap.style.display='none';
     if(navLogo){ navLogo.style.display='block'; }
     if(navBrand) navBrand.style.display='none';
   } else if(pos==='nav-hero'){
@@ -303,6 +321,9 @@ window.addEventListener('message', function(e) {
     const wrap = document.getElementById('heroLogoWrap');
     const img = document.getElementById('heroLogo');
     if(img) img.style.height = value+'px';
+    // Sincronizar también el logo absoluto
+    const absLogo = document.getElementById('heroLogoAbs');
+    if(absLogo) absLogo.style.height = value+'px';
   }
   if(field === 'logoPosition'){
     applyLogoPosition(value);
@@ -310,6 +331,7 @@ window.addEventListener('message', function(e) {
   if(field === 'logoUrl'){
     const nl=document.getElementById('navLogo'); if(nl){ nl.src=value; nl.style.display='block'; }
     const hl=document.getElementById('heroLogo'); if(hl){ hl.src=value; hl.style.display='block'; }
+    const al=document.getElementById('heroLogoAbs'); if(al) al.src=value;
     const fl=document.getElementById('footerLogo'); if(fl) fl.innerHTML='<img src="'+value+'" style="height:55px;object-fit:contain;margin:0 auto;display:block">';
   }
 
