@@ -247,6 +247,40 @@ function getDeliveryPrice(locLat,locLng){
 }
 
 // ── EDITOR EN VIVO — escucha cambios del admin ──────────────
+function applyLogoPosition(pos){
+  const heroWrap = document.getElementById('heroLogoWrap');
+  const heroLogo = document.getElementById('heroLogo');
+  const navLogo  = document.getElementById('navLogo');
+  const navBrand = document.getElementById('navBrand');
+  // Reset todo
+  if(heroWrap){ heroWrap.style.display=''; heroWrap.style.textAlign='left'; }
+  if(heroLogo){ heroLogo.style.display='none'; heroLogo.style.margin='0'; }
+  if(navLogo) navLogo.style.display='none';
+  if(navBrand) navBrand.style.display='';
+
+  if(!pos || pos==='hidden') return;
+
+  if(pos==='hero-left'){
+    if(heroWrap){ heroWrap.style.display='block'; heroWrap.style.textAlign='left'; }
+    if(heroLogo){ heroLogo.style.display='block'; heroLogo.style.margin='0'; }
+  } else if(pos==='hero-center'){
+    if(heroWrap){ heroWrap.style.display='block'; heroWrap.style.textAlign='center'; heroWrap.style.width='100%'; }
+    if(heroLogo){ heroLogo.style.display='inline-block'; heroLogo.style.margin='0 auto'; }
+  } else if(pos==='hero-right'){
+    if(heroWrap){ heroWrap.style.display='block'; heroWrap.style.textAlign='right'; heroWrap.style.width='100%'; }
+    if(heroLogo){ heroLogo.style.display='inline-block'; heroLogo.style.marginLeft='auto'; heroLogo.style.marginRight='0'; }
+  } else if(pos==='nav-only'){
+    if(heroWrap) heroWrap.style.display='none';
+    if(navLogo){ navLogo.style.display='block'; }
+    if(navBrand) navBrand.style.display='none';
+  } else if(pos==='nav-hero'){
+    if(heroWrap){ heroWrap.style.display='block'; heroWrap.style.textAlign='left'; }
+    if(heroLogo){ heroLogo.style.display='block'; heroLogo.style.margin='0'; }
+    if(navLogo){ navLogo.style.display='block'; }
+    if(navBrand) navBrand.style.display='none';
+  }
+}
+
 window.addEventListener('message', function(e) {
   const msg = e.data;
   if(!msg || msg.type !== 'GT_DESIGN') return;
@@ -269,6 +303,9 @@ window.addEventListener('message', function(e) {
     const wrap = document.getElementById('heroLogoWrap');
     const img = document.getElementById('heroLogo');
     if(img) img.style.height = value+'px';
+  }
+  if(field === 'logoPosition'){
+    applyLogoPosition(value);
   }
   if(field === 'logoUrl'){
     const nl=document.getElementById('navLogo'); if(nl){ nl.src=value; nl.style.display='block'; }
@@ -357,6 +394,7 @@ async function init(){
   // Apply design settings
   const dsgn=settings.design||{};
   if(dsgn.logoSize){ const hl=document.getElementById('heroLogo'); if(hl) hl.style.height=dsgn.logoSize+'px'; }
+  if(dsgn.logoPosition){ applyLogoPosition(dsgn.logoPosition); }
   if(dsgn.splashUrl){ const si=document.getElementById('splashImg'); if(si) si.src=dsgn.splashUrl; }
   if(dsgn.colorPrimary){ const tb=document.getElementById('heroTopBar'); if(tb) tb.style.background=dsgn.colorPrimary; }
 

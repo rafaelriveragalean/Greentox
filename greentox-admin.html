@@ -166,6 +166,7 @@ const DEFAULT_SETTINGS = {
     heroBtnText:"🧃 Elegir mis shots",
     splashUrl:"https://res.cloudinary.com/dlkjan5b0/image/upload/q_auto,f_auto,w_1400/v1778251613/WhatsApp_Image_2026-05-08_at_10.45.37_zjljsw.jpg",
     logoSize:70,
+    logoPosition:'hero-left',
     showComoFunciona:true,
     showFooter:true,
     showBadgeRojo:true,
@@ -738,7 +739,7 @@ function DisenoTab({settings, setSettings, showToast, logos, setLogos}){
                 React.createElement('div',{style:{flex:1}},
                   React.createElement('div',{style:{fontSize:11,fontWeight:700,color:G.gray,textTransform:'uppercase',letterSpacing:.5,marginBottom:8}},'Tamaño del logo'),
                   React.createElement('div',{style:{display:'flex',alignItems:'center',gap:10}},
-                    React.createElement('input',{type:'range',min:40,max:160,value:dsgn.logoSize||70,
+                    React.createElement('input',{type:'range',min:40,max:700,value:dsgn.logoSize||70,
                       onChange:e=>send('logoSize',parseInt(e.target.value)),
                       style:{flex:1,accentColor:G.primary}}),
                     React.createElement('span',{style:{fontWeight:800,fontSize:14,color:G.dark,minWidth:40}},(dsgn.logoSize||70)+'px')
@@ -750,6 +751,49 @@ function DisenoTab({settings, setSettings, showToast, logos, setLogos}){
                 )
               ),
               React.createElement('div',{style:{fontSize:11,color:G.gray,marginTop:8}},'Se aplica en navbar, hero y footer')
+            ),
+            // Logo Position
+            React.createElement('div',{style:{marginBottom:20}},
+              React.createElement('div',{style:{fontSize:11,fontWeight:700,color:G.gray,textTransform:'uppercase',letterSpacing:.5,marginBottom:10}},'Posición del logo'),
+              React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6}},
+                [
+                  {val:'hero-left',   label:'🖼️ Hero', sub:'Izquierda'},
+                  {val:'hero-center', label:'🖼️ Hero', sub:'Centro'},
+                  {val:'hero-right',  label:'🖼️ Hero', sub:'Derecha'},
+                  {val:'nav-only',    label:'🔝 Solo Nav', sub:'Barra top'},
+                  {val:'nav-hero',    label:'🔝+🖼️ Nav', sub:'+ Hero'},
+                  {val:'hidden',      label:'🚫 Oculto', sub:'Sin logo'},
+                ].map(opt=>
+                  React.createElement('button',{
+                    key:opt.val,
+                    onClick:()=>send('logoPosition',opt.val),
+                    style:{
+                      border:'2px solid '+((dsgn.logoPosition||'hero-left')===opt.val ? G.primary : '#E0E0E0'),
+                      borderRadius:8,
+                      padding:'8px 4px',
+                      background:(dsgn.logoPosition||'hero-left')===opt.val ? '#F0F9F0' : '#fff',
+                      cursor:'pointer',
+                      textAlign:'center',
+                      transition:'all .15s'
+                    }
+                  },
+                    React.createElement('div',{style:{fontSize:14}},opt.label),
+                    React.createElement('div',{style:{fontSize:10,color:G.gray,marginTop:2}},opt.sub)
+                  )
+                )
+              ),
+              logos.dark && React.createElement('div',{style:{marginTop:10,padding:10,background:'#F9FBF9',borderRadius:8}},
+                React.createElement('div',{style:{fontSize:10,color:G.gray,marginBottom:6,textAlign:'center'}},'Vista previa posición:'),
+                React.createElement('div',{style:{
+                  display:'flex',
+                  justifyContent:(dsgn.logoPosition||'hero-left')==='hero-center'?'center':(dsgn.logoPosition||'hero-left')==='hero-right'?'flex-end':'flex-start',
+                  padding:'6px 0'
+                }},
+                  (dsgn.logoPosition||'hero-left')==='hidden'
+                    ? React.createElement('span',{style:{fontSize:12,color:G.gray,fontStyle:'italic'}},'Logo oculto')
+                    : React.createElement('img',{src:logos.dark,style:{height:Math.min(dsgn.logoSize||70,50)+'px',objectFit:'contain'}})
+                )
+              )
             ),
             // Splash
             React.createElement('div',{style:{marginBottom:20}},
