@@ -1,0 +1,7 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/admin"
+  to = "/greentox-admin.html"
+  status = 200
